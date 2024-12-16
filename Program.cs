@@ -1,6 +1,5 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Tamagotchi
 {
@@ -8,68 +7,75 @@ namespace Tamagotchi
     {
         static void Main(string[] args)
         {
-            //Obter a lista de especies de Pokémon
-            var client = new RestClient("https://pokeapi.co/api/v2/pokemon-species/");
-            var request = new RestRequest("", Method.Get);
-            var response = client.Execute(request);
+            Menu menu = new Menu();
+            PokemonApiService service = new PokemonApiService();
+            List<PokemonResult> especiesDisponiveis = service.ObterEspeciesDisponiveis();
+            List<PokemonDetailsResult> mascotesAdotados = new List<PokemonDetailsResult>();
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            menu.MostrarMensagemDeBoasVindas();
+
+            while (true)
             {
-                var pokemonEspeciesResposta = JsonConvert.DeserializeObject<PokemonSpeciesResult>(response.Content);
-
-                //Apresentar as opções ao jogador
-                Console.WriteLine("Escolha um Tamagotchi:");
-                for(int i = 0; i < pokemonEspeciesResposta.Results.Count; i++)
+                menu.MostrarMenuPrincipal();
+                int escolha = menu.ObterEscolhaDoJogador();
+                switch (escolha)
                 {
-                    Console.WriteLine($"{i + 1}. {pokemonEspeciesResposta.Results[i].Name}");
-                }
+                    case 1:
+                        while (true)
+                        {
+                            menu.MostrarMenuDeAdocao();
+                            escolha = menu.ObterEscolhaDoJogador();
+                            switch (escolha)
+                            {
+                                case 1:
+                                    menu.ObterEspeciesDisponiveis(especiesDisponiveis);
+                                    break;
 
-                // Obter a escolha do jogador
-                int escolha;
+                                case 2:
+                                    menu.ObterEspeciesDisponiveis(especiesDisponiveis);
+                                    int indiceEspecie = menu.ObterEspecieEscolhida(especiesDisponiveis);
+                                    PokemonDetailsResult detalhes = service.ObterDetalhesDaEspecie(especiesDisponiveis[indiceEspecie]);
+                                    menu.ObterDetalhesDaEspecie(detalhes);
+                                    break;
 
-                while (true)
-                {
-                    Console.WriteLine("\n");
-                    Console.Write("Escolha um número: ");
-                    if(!int.TryParse(Console.ReadLine(), out escolha) && escolha >= 1 && escolha <= pokemonEspeciesResposta.Results.Count)
-                    {
-                        Console.WriteLine("Escolha inválida. Tente novamente.");
-                    }
-                    else
-                    {
+                                case 3:
+                                    menu.ObterEspeciesDisponiveis(especiesDisponiveis);
+                                    indiceEspecie = menu.ObterEspecieEscolhida(especiesDisponiveis);
+                                    detalhes = service.ObterDetalhesDaEspecie(especiesDisponiveis[indiceEspecie]);
+                                    menu.ObterDetalhesDaEspecie(detalhes);
+                                    if (menu.ConfirmarAdocao())
+                                    {
+                                        mascotesAdotados.Add(detalhes);
+                                        Console.WriteLine("Parabéns! Você adotou um " + detalhes.Name + "!");
+                                        Console.WriteLine("──────────────");
+                                        Console.WriteLine("────▄████▄────");
+                                        Console.WriteLine("──▄████████▄──");
+                                        Console.WriteLine("──██████████──");
+                                        Console.WriteLine("──▀████████▀──");
+                                        Console.WriteLine("─────▀██▀─────");
+                                        Console.WriteLine("──────────────");
+                                    }
+                                    break;
+
+                                case 4:
+                                    break;
+                            }
+                            if (escolha == 4)
+                            {
+                                break;
+                            }
+                        }
                         break;
-                    }
-                }
 
-                //Obter as caracteriscas do Pokémon escolhido
-                client = new RestClient($"https://pokeapi.co/api/v2/pokemon/{escolha}");
-                request = new RestRequest("", Method.Get);
-                response = client.Execute(request);
+                    case 2:
+                        menu.MostrarMascotesAdotados(mascotesAdotados);
+                        break;
 
-                var pokemonDetalhes = JsonConvert.DeserializeObject<PokemonDetailsResult>(response.Content);
-
-                var pokemonEscolhido = pokemonEspeciesResposta.Results[escolha - 1];
-
-                Console.WriteLine("\n");
-                Console.WriteLine($"Você escolheu o {pokemonEscolhido.Name}");
-                Console.WriteLine("Detalhes:");
-                Console.WriteLine($"- Nome: {pokemonDetalhes.Name}");
-                Console.WriteLine($"- Peso: {pokemonDetalhes.Weight}");
-                Console.WriteLine($"- Altura: {pokemonDetalhes.Height}");
-
-                Console.WriteLine("\n Habilidades do Mascote: ");
-
-                foreach ( var abilityDetail in pokemonDetalhes.Abilities)
-                {
-                    Console.WriteLine($"Nome da Habilidade: {abilityDetail.Ability.Name}");
+                    case 3:
+                        Console.WriteLine("\nObrigado por jogar! até a próxima!");
+                        return;
                 }
             }
-            else
-            {
-                Console.WriteLine(response.ErrorMessage);
-            }
-            Console.ReadKey();
-
         }
     }
 }
