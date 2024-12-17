@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tamagotchi.Model;
 
-namespace Tamagotchi
+namespace Tamagotchi.View
 {
-    internal class Menu
-    {       
+    internal class TamagotchiView
+    {
         public void MostrarMensagemDeBoasVindas()
         {
             Console.WriteLine(@"
@@ -31,7 +32,7 @@ namespace Tamagotchi
         public int ObterEscolhaDoJogador()
         {
             int escolha;
-            while(!int.TryParse(Console.ReadLine(), out escolha) || escolha < 1 || escolha > 4)
+            while (!int.TryParse(Console.ReadLine(), out escolha) || escolha < 1 || escolha > 4)
             {
                 Console.Write("Escolha Invalida. Por favor, escolha uma opção entre 1 e 4: ");
             }
@@ -92,7 +93,7 @@ namespace Tamagotchi
             {
                 for (int i = 0; i < mascotesAdotados.Count; i++)
                 {
-                    Console.WriteLine((i + 1) + ". " + mascotesAdotados[i].Name);
+                    Console.WriteLine(i + 1 + ". " + mascotesAdotados[i].Name);
                 }
             }
         }
@@ -104,7 +105,7 @@ namespace Tamagotchi
             while (true)
             {
                 Console.Write("Escolha uma espécie pelo número (1- " + especies.Count + "): ");
-                if(int.TryParse(Console.ReadLine(), out escolha) && escolha >= 1 && escolha <= especies.Count)
+                if (int.TryParse(Console.ReadLine(), out escolha) && escolha >= 1 && escolha <= especies.Count)
                 {
                     break;
                 }
