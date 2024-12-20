@@ -24,20 +24,21 @@ namespace Tamagotchi.View
         {
             Console.WriteLine("\n--------------------- MENU ---------------------");
             Console.WriteLine("1 - Adotar Mascote Virtual");
-            Console.WriteLine("2 - Ver seus Mascotes");
-            Console.WriteLine("3 - Sair");
+            Console.WriteLine("2 - Interagir com seu Mascote");
+            Console.WriteLine("3 - Ver seus Mascotes");
+            Console.WriteLine("4 - Sair");
             Console.Write("Escolha uma Opção: ");
         }
 
-        public int ObterEscolhaDoJogador()
+        public int ObterEscolhaDoJogador(int maxOpcao)
         {
             int escolha;
-            while (!int.TryParse(Console.ReadLine(), out escolha) || escolha < 1 || escolha > 4)
+            while (!int.TryParse(Console.ReadLine(), out escolha) || escolha < 1 || escolha > maxOpcao)
             {
-                Console.Write("Escolha Invalida. Por favor, escolha uma opção entre 1 e 4: ");
+                Console.Write($"Escolha Invalida. Por favor, escolha uma opção entre 1 e {maxOpcao}: ");
             }
             return escolha;
-        }
+        }       
 
         public void MostrarMenuDeAdocao()
         {
@@ -81,7 +82,7 @@ namespace Tamagotchi.View
             return resposta.ToLower() == "s";
         }
 
-        public void MostrarMascotesAdotados(List<PokemonDetailsResult> mascotesAdotados)
+        public void MostrarMascotesAdotados(List<TamagotchiDto> mascotesAdotados)
         {
             Console.WriteLine("\n------------------------------------------");
             Console.WriteLine("Mascotes Adotados");
@@ -93,9 +94,22 @@ namespace Tamagotchi.View
             {
                 for (int i = 0; i < mascotesAdotados.Count; i++)
                 {
-                    Console.WriteLine(i + 1 + ". " + mascotesAdotados[i].Name);
+                    Console.WriteLine(i + 1 + ". " + mascotesAdotados[i].Nome);
                 }
             }
+        }
+
+        public void MostrarMenuInteracao()
+        {
+            Console.WriteLine("\n------------------------------------------");
+            Console.WriteLine("Menu de Interação:");
+            Console.WriteLine("1 - Saber como seu mascote está");
+            Console.WriteLine("2 - Alimentar Mascote");
+            Console.WriteLine("3 - Brincar com o Mascote");
+            Console.WriteLine("4 - Descansar seu Mascote");
+            Console.WriteLine("5 - Dar Carinho no Mascote");
+            Console.WriteLine("6 - Voltar");
+            Console.Write("Escolha uma opção: ");
         }
 
         public int ObterEspecieEscolhida(List<PokemonResult> especies)

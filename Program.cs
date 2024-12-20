@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Tamagotchi.Controller;
-using Tamagotchi.Model;
-using Tamagotchi.Service;
+﻿using Tamagotchi.Controller;
 
 namespace Tamagotchi
 {

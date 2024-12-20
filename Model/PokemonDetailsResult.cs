@@ -11,9 +11,9 @@ namespace Tamagotchi.Model
     {
         public List<AbilityDetail> Abilities { get; set; }
         public string Name { get; set; }
-        public string Order { get; set; }
-        public string Height { get; set; }
-        public string Weight { get; set; }
+        public int Order { get; set; }
+        public int Height { get; set; }
+        public int Weight { get; set; }
     }
 
     public class AbilityDetail
